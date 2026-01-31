@@ -78,7 +78,7 @@ type RegisterFormData = z.infer<typeof registerSchema>;
 
 const Auth = () => {
   const navigate = useNavigate();
-  const { login, signup, isAuthenticated, quickLoginAsWarden, user } = useAuth();
+  const { login, signup, isAuthenticated, user } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -157,12 +157,6 @@ const Auth = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  // Quick login for warden - goes directly to management
-  const handleQuickWardenLogin = () => {
-    quickLoginAsWarden();
-    navigate('/management', { replace: true });
   };
 
   const switchMode = () => {
@@ -556,24 +550,6 @@ const Auth = () => {
               </button>
             </div>
 
-            {/* Dev Quick Login Button */}
-            {process.env.NODE_ENV !== 'production' && (
-              <div className="mt-4 border-t pt-4">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={handleQuickWardenLogin}
-                  className="w-full gap-2 text-xs"
-                >
-                  <Shield className="h-3 w-3" />
-                  Quick Login as Warden (Dev Only)
-                </Button>
-                <p className="mt-2 text-center text-xs text-muted-foreground">
-                  Or use: admin@hostel.edu / warden123
-                </p>
-              </div>
-            )}
           </CardContent>
         </Card>
       </motion.div>

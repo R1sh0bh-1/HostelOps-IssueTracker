@@ -33,7 +33,6 @@ interface AuthContextType {
   signup: (data: SignupData) => Promise<{ error: Error | null }>;
   logout: () => Promise<void>;
   updateProfile: (updates: Partial<UserProfile>) => Promise<void>;
-  quickLoginAsWarden: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -73,7 +72,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         createdAt: new Date(updatedUser.createdAt),
       };
 
-      // If broadcasted to all, check ID. Ideally room based, but checking ID is safe.
       if (mapped.id === user.id) {
         setUser(mapped);
       }
@@ -161,19 +159,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         method: 'PUT',
         body: JSON.stringify(updates),
       });
-      // State update will happen via socket or optimistic update here
+
       if (user) {
         setUser({ ...user, ...updates });
       }
     } catch (e) {
-      console.error("Failed to update profile", e);
+      console.error('Failed to update profile', e);
     }
-  };
-
-  // Quick login for development - sets warden credentials
-  const quickLoginAsWarden = () => {
-    // Use real seeded admin credentials so backend-auth-only features work
-    void login('admin@hostel.edu', 'warden123');
   };
 
   return (
@@ -186,7 +178,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signup,
         logout,
         updateProfile,
-        quickLoginAsWarden,
       }}
     >
       {children}
